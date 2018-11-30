@@ -449,6 +449,79 @@ public boolean canJump(int[] nums) {
 }
 ```
 
+## Coin Change
+
+### 问题描述
+
+You are given coins of different denominations and a total amount of money amount. Write a function to compute the fewest number of coins that you need to make up that amount. If that amount of money cannot be made up by any combination of the coins, return -1.
+
+### 解决思路
+
+这道题也是背包问题的衍生题目之一，定义好子问题求解不难
+
+写出这道题的主要原因还是又犯了老毛病，又又又又又又又把子问题重复求解了不知道多少遍
+
+当然动态规划有时往往与直接递归求解思路相反，不熟练想不起来
+
+不过既然使用了动态规划，就要好好的把公共子问题提出，不然效率天差地别
+
+### 代码
+
+``` java
+public static int coinChange(int[] coins, int amount) {
+    if(amount == 0)
+        return 0;
+    int[] dp = new int[amount + 1];
+    for(int i = 1; i <= amount; i++){
+        for(int j = 0; j < coins.length; j++){
+            if(i - coins[j] == 0)
+                dp[i] = 1;
+            if(i - coins[j] > 0 && dp[i - coins[j]] > 0)
+                if(dp[i] != 0)
+                    dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
+                else
+                    dp[i] = dp[i - coins[j]] + 1;
+        }
+    }
+    if(dp[amount] == 0)
+        return -1;
+    return dp[amount];
+}
+```
+
+## Longest Increasing Subsequence
+
+### 问题描述
+
+Given an unsorted array of integers, find the length of longest increasing subsequence.
+
+### 解决思路
+
+最直接的思路是将子问题定义为“求解头部到该位置的最长递增子序列长度”，这样可以得到O(n^2)时间复杂度的解法
+
+另一种更巧妙的思路是将子问题定义为“求解头部到该位置各长度子序列最小末尾数组”，这种思路下的解法时间复杂度为O(nlogn)
+
+末尾数组是一个很有意思的思路，事实上在每次解决一个新的子问题时，我们都不关心前一个子问题中的子序列具体样子。而这种解法提供我们解题所需要的局部信息的最小集：1.最长的链有多少个元素， 2.每种长度的链的最小末尾是多少
+
+### 代码
+
+``` java
+public int lengthOfLIS(int[] nums) {
+    if(nums.length == 0)
+        return 0;
+    int[] dp = new int[nums.length];
+    int max = 0;
+    for(int i = 0; i < nums.length; i++){
+        for(int j = 0; j < i; j++) {
+            if (nums[i] > nums[j])
+                dp[i] = Math.max(dp[i], dp[j] + 1);
+        }
+        max = Math.max(max, dp[i]);
+    }
+    return max + 1;
+}
+```
+
 ## 编程细节
 
 1. 求中值时，a + (b - a) / 2的写法可以避免(a + b) / 2导致的溢出问题
