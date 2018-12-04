@@ -1,4 +1,4 @@
-package pers.swegnhan.leetcode.design;
+package pers.swegnhan.leetcode.medium.design;
 
 import java.util.*;
 
