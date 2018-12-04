@@ -522,6 +522,83 @@ public int lengthOfLIS(int[] nums) {
 }
 ```
 
+## Insert Delete GetRandom O(1)
+
+### 问题描述
+
+Design a data structure that supports all following operations in average O(1) time.
+
+1. insert(val): Inserts an item val to the set if not already present.
+2. remove(val): Removes an item val from the set if present.
+3. getRandom: Returns a random element from current set of elements. Each element must have the same probability of being returned.
+
+### 解决思路
+
+因为插入和删除时要判断是否含有该元素且需要O(1)时间，故Hash不可避
+
+难得的机会就简单研究了一下java自身HashMap的hash方法。其中比较重要的一点就是如何将32位大小的哈希值空间映射到容器大小。对于这个问题java给出的处理方法是与容器容量减一的值做二进制与
+``` java
+key & (length - 1)
+```
+与IP地址掩码的处理方式十分相近。需要注意的是，只有容器大小为2的整倍数时，才能比较好的利用这种方法
+
+### 代码
+
+``` java
+class RandomizedSet {
+
+    int capacity = 256;
+
+    int size = 0;
+
+    int[] weight = new int[256];
+
+    ArrayList<Integer>[] nums = new ArrayList[256];
+
+    /** Initialize your data structure here. */
+    public RandomizedSet() {
+        for(int i = 0; i < nums.length; i++)
+            nums[i] = new ArrayList<>();
+    }
+
+    /** Inserts a value to the set. Returns true if the set did not already contain the specified element. */
+    public boolean insert(int val) {
+        int hashcode = Integer.hashCode(val) & (capacity - 1);
+        if(nums[hashcode].contains(val))
+            return false;
+        nums[hashcode].add(val);
+        weight[hashcode]++;
+        size++;
+        return true;
+    }
+
+    /** Removes a value from the set. Returns true if the set contained the specified element. */
+    public boolean remove(int val) {
+        int hashcode = Integer.hashCode(val) & (capacity - 1);
+        if(!nums[hashcode].contains(val))
+            return false;
+        nums[hashcode].remove(nums[hashcode].indexOf(val));
+        weight[hashcode]--;
+        size--;
+        return true;
+    }
+
+    /** Get a random element from the set. */
+    public int getRandom() {
+        Random random = new Random();
+        int ran = Math.abs(random.nextInt() % size) + 1;
+        int sum = 0, pos1 = -1, pos2 = 0;
+        while(sum < ran){
+            pos1++;
+            sum += weight[pos1];
+        }
+        pos2 = ran - sum + weight[pos1] - 1;
+        return nums[pos1].get(pos2);
+    }
+    
+}
+```
+
 ## 编程细节
 
 1. 求中值时，a + (b - a) / 2的写法可以避免(a + b) / 2导致的溢出问题
