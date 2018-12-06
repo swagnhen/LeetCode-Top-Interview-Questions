@@ -599,6 +599,43 @@ class RandomizedSet {
 }
 ```
 
+## Sqrt(x)
+
+### 问题描述
+
+Implement int sqrt(int x).
+
+Compute and return the square root of x, where x is guaranteed to be a non-negative integer.
+
+Since the return type is an integer, the decimal digits are truncated and only the integer part of the result is returned.
+
+### 解决思路 
+
+这道题暴力解即可AC，数学上也可以用牛顿法解
+
+比较好的通解思路是使用二分查找，不过0,1处理上比较揪心
+
+### 代码
+
+``` java
+public int mySqrt(int x) {
+    int start = 0, mid = 0, end = x;
+    int prestart = start, preend = end;
+    while(start < end){
+        mid = (start + end + 1) / 2;
+        if(mid > x / mid)
+            end = mid;
+        else
+            start = mid;
+        if(prestart == start && preend == end)
+            break;
+        preend = end;
+        prestart = start;
+    }
+    return mid == 0 || mid == 1 ? mid : mid - 1;
+}
+```
+
 ## 编程细节
 
 1. 求中值时，a + (b - a) / 2的写法可以避免(a + b) / 2导致的溢出问题
