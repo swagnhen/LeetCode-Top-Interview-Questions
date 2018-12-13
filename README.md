@@ -636,6 +636,73 @@ public int mySqrt(int x) {
 }
 ```
 
+## Majority Element
+
+### 问题描述
+
+Given an array of size n, find the majority element. The majority element is the element that appears more than ⌊ n/2 ⌋ times.
+
+You may assume that the array is non-empty and the majority element always exist in the array.
+
+### 解决思路
+
+这道题利用Map可以很轻松的解决，但是注意到题设中给出主要元素的个数一定占数组长度一半以上，故可以以一定技巧改善利用Map的思路
+
+下文代码中给出的解法利用到了这一点，直觉上明白算法正确性但数学证明我不会，感觉对就完事了
+
+### 代码
+
+``` java
+public int majorityElement(int[] nums) {
+    int count = 0, key = 0;
+    for(int input : nums){
+        if(count == 0){
+            count++;
+            key = input;
+        }
+        else if(key == input)
+            count++;
+        else
+            count--;
+    }
+    return key;
+}
+```
+
+## Task Scheduler
+
+### 问题描述
+
+Given a char array representing tasks CPU need to do. It contains capital letters A to Z where different letters represent different tasks.Tasks could be done without original order. Each task could be done in one interval. For each interval, CPU could finish one task or just be idle.
+
+However, there is a non-negative cooling interval n that means between two same tasks, there must be at least n intervals that CPU are doing different tasks or just be idle.
+
+You need to return the least number of intervals the CPU will take to finish all the given tasks.
+
+### 解决思路
+
+这道题如果想以迭代\递归遍历解空间的方式便陷入了僵局，一方面遍历本身会非常复杂，另一方面结束条件也不好控制
+
+其实有一条重要条件就是每个元素都是n间隔，故此我们找出频次最高的元素再用其他元素插入该元素区间即可
+
+### 代码
+
+``` java
+public int leastInterval(char[] tasks, int n) {
+    int[] map = new int[26];
+    for(char input : tasks)
+        map[input - 'A']++;
+    Arrays.sort(map);
+    int countMax = 0;
+    for(int count : map){
+        if(count == map[25])
+            countMax++;
+    }
+    int posibility = (map[25] - 1) * (n + 1) + countMax;
+    return tasks.length >= posibility ? tasks.length : posibility;
+}
+```
+
 ## 编程细节
 
 1. 求中值时，a + (b - a) / 2的写法可以避免(a + b) / 2导致的溢出问题

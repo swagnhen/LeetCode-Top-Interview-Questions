@@ -35,8 +35,22 @@ public class TaskScheduler {
         return count;
     }
 
+    public static int leastIntervalPlus(char[] tasks, int n) {
+        int[] map = new int[26];
+        for(char input : tasks)
+            map[input - 'A']++;
+        Arrays.sort(map);
+        int countMax = 0;
+        for(int count : map){
+            if(count == map[25])
+                countMax++;
+        }
+        int posibility = (map[25] - 1) * (n + 1) + countMax;
+        return tasks.length >= posibility ? tasks.length : posibility;
+    }
+
     public static void main(String[] args){
-        System.out.println(leastInterval(new char[]{'A','A','A','B','B','B'}, 2));
+        System.out.println(leastIntervalPlus(new char[]{'A','A','A','B','B','B'}, 50));
     }
 
 }
