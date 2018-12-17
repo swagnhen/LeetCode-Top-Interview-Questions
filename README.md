@@ -703,6 +703,40 @@ public int leastInterval(char[] tasks, int n) {
 }
 ```
 
+## Product of Array Except Self
+
+### 问题描述
+
+Given an array nums of n integers where n > 1,  return an array output such that output[i] is equal to the product of all the elements of nums except nums[i].
+
+### 解决思路
+
+题目中要求不许使用除法其实不仅仅是增加难度， 除法原理虽然简单，但如果数组中含有0元素则会使情况变得比较复杂
+
+更好的思路是做两趟累乘，第一趟乘上所有下标小于自身的元素，第二趟乘上所有下标大于自身的元素
+
+### 代码
+
+``` java
+public int[] productExceptSelf(int[] nums) {
+    if(nums.length == 0 || nums.length == 1)
+        return nums;
+    int left = 1, right = 1;
+    int[] result = new int[nums.length];
+    for(int i = 0; i < result.length; i++)
+        result[i] = 1;
+    for(int i = 1; i < nums.length; i++) {
+        result[i] *= left * nums[i - 1];
+        left *= nums[i - 1];
+    }
+    for(int i = nums.length - 2; i >=0; i--){
+        result[i] *= right * nums[i + 1];
+        right *= nums[i + 1];
+    }
+    return result;
+}
+```
+
 ## 编程细节
 
 1. 求中值时，a + (b - a) / 2的写法可以避免(a + b) / 2导致的溢出问题
