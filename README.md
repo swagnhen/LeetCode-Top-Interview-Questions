@@ -18,17 +18,19 @@ Follow up:Can you solve it without using extra space?
 
 ### 代码
 
-``` java
-public boolean hasCycle(ListNode head) {
-    if(head==null) return false;
-    ListNode walker = head;
-    ListNode runner = head;
-    while(runner.next!=null && runner.next.next!=null) {
-        walker = walker.next;
-        runner = runner.next.next;
-        if(walker==runner) return true;
+```java
+class Solution {
+    public boolean hasCycle(ListNode head) {
+        if(head==null) return false;
+        ListNode walker = head;
+        ListNode runner = head;
+        while(runner.next!=null && runner.next.next!=null) {
+            walker = walker.next;
+            runner = runner.next.next;
+            if(walker==runner) return true;
+        }
+        return false;
     }
-    return false;
 }
 ```
 
@@ -49,19 +51,21 @@ Given two sorted integer arrays nums1 and nums2, merge nums2 into nums1 as one s
 
 ### 代码
 
-``` java
-public void mergePlus(int[] nums1, int m, int[] nums2, int n){
-    int p1 = m - 1, p2 = n - 1, p3 = m + n -1;
-    while(p1 >= 0 && p2 >= 0){
-        if(nums1[p1] >= nums2[p2])
+```java
+class Solution {
+    public void mergePlus(int[] nums1, int m, int[] nums2, int n){
+        int p1 = m - 1, p2 = n - 1, p3 = m + n -1;
+        while(p1 >= 0 && p2 >= 0){
+            if(nums1[p1] >= nums2[p2])
+                nums1[p3--] = nums1[p1--];
+            else
+                nums1[p3--] = nums2[p2--];
+        }
+        while(p1 >= 0)
             nums1[p3--] = nums1[p1--];
-        else
+        while(p2 >= 0)
             nums1[p3--] = nums2[p2--];
     }
-    while(p1 >= 0)
-        nums1[p3--] = nums1[p1--];
-    while(p2 >= 0)
-        nums1[p3--] = nums2[p2--];
 }
 ```
 
@@ -83,19 +87,21 @@ Note that you cannot sell a stock before you buy one.
 
 ### 代码
 
-``` java
-public int maxProfit (int[] prices) {
-    if(prices.length == 0)
-        return 0;
-    int max  = 0, sum = 0;
-    for(int i = 1; i < prices.length; i++){
-        if(sum < 0)
-            sum = prices[i] - prices[i - 1];
-        else
-            sum += prices[i] - prices[i - 1];
-        max = Math.max(max, sum);
+```java
+class Solution {
+    public int maxProfit (int[] prices) {
+        if(prices.length == 0)
+            return 0;
+        int max  = 0, sum = 0;
+        for(int i = 1; i < prices.length; i++){
+            if(sum < 0)
+                sum = prices[i] - prices[i - 1];
+            else
+                sum += prices[i] - prices[i - 1];
+            max = Math.max(max, sum);
+        }
+        return max;
     }
-    return max;
 }
 ```
 
@@ -195,17 +201,19 @@ Count the number of prime numbers less than a non-negative number, n.
 
 ### 代码
 
-``` java
-public static int countPrimes(int n) {
-    boolean[] isNotPrimes = new boolean[n];
-    int count = 0;
-    for(long i = 2; i < n; i++){
-        if(isNotPrimes[(int)i] == false)
-            count++;
-        for(long j = i; i * j < n; j++)
-            isNotPrimes[(int)(i * j)] = true;
+```java
+class Solution {
+    public static int countPrimes(int n) {
+        boolean[] isNotPrimes = new boolean[n];
+        int count = 0;
+        for(long i = 2; i < n; i++){
+            if(isNotPrimes[(int)i] == false)
+                count++;
+            for(long j = i; i * j < n; j++)
+                isNotPrimes[(int)(i * j)] = true;
+        }
+        return count;
     }
-    return count;
 }
 ```
 
@@ -225,14 +233,16 @@ O(m)的解法思路在于计算输入数字n变为零之前执行n = (n - 1) & n
 
 ### 代码
 
-``` java
-public int hammingWeight(int n) {
-    int count = 0;
-    while(n != 0){
-        count++;
-        n = (n - 1) & n;
+```java
+class Solution {
+    public int hammingWeight(int n) {
+        int count = 0;
+        while(n != 0){
+            count++;
+            n = (n - 1) & n;
+        }
+        return count;
     }
-    return count;
 }
 ```
 
@@ -248,19 +258,21 @@ Given a string, find the length of the longest substring without repeating chara
 
 ### 代码
 
-``` java
-public int lengthOfLongestSubstring(String s) {
-    char[] input = s.toCharArray();
-    int max = 0;
-    int start = -1;
-    Map<Character, Integer> map = new HashMap<>();
-    for(int i = 0; i < input.length; i++){
-        if (map.containsKey(input[i]))
-            start = start > map.get(input[i]) ? start : map.get(input[i]);
-        map.put(input[i], i);
-        max = Math.max(max, i - start);
+```java
+class Solution {
+    public int lengthOfLongestSubstring(String s) {
+        char[] input = s.toCharArray();
+        int max = 0;
+        int start = -1;
+        Map<Character, Integer> map = new HashMap<>();
+        for(int i = 0; i < input.length; i++){
+            if (map.containsKey(input[i]))
+                start = start > map.get(input[i]) ? start : map.get(input[i]);
+            map.put(input[i], i);
+            max = Math.max(max, i - start);
+        }
+        return max;
     }
-    return max;
 }
 ```
 
@@ -283,18 +295,20 @@ Note: Your algorithm should run in O(n) time complexity and O(1) space complexit
 
 ### 代码
 
-``` java
-public boolean increasingTriplet(int[] nums) {
-    int low = Integer.MAX_VALUE, mid = Integer.MAX_VALUE;
-    for(int i = 0; i < nums.length; i++){
-        if(nums[i] <= low)
-            low = nums[i];
-        else if(nums[i] <= mid)
-            mid = nums[i];
-        else
-            return true;
+```java
+class Solution {
+    public boolean increasingTriplet(int[] nums) {
+        int low = Integer.MAX_VALUE, mid = Integer.MAX_VALUE;
+        for(int i = 0; i < nums.length; i++){
+            if(nums[i] <= low)
+                low = nums[i];
+            else if(nums[i] <= mid)
+                mid = nums[i];
+            else
+                return true;
+        }
+        return false;
     }
-    return false;
 }
 ```
 
@@ -321,19 +335,21 @@ You may imagine that nums[-1] = nums[n] = -∞.
 
 ### 代码
 
-``` java
-public static int findPeakElement(int[] nums) {
-    return findPeakElementPlusStep(nums, 0, nums.length - 1);
-}
-
-public static int findPeakElementPlusStep(int[] nums, int start , int end) {
-    if(start == end)
-        return start;
-    int mid = (start + end) / 2;
-    if(nums[mid] > nums[mid + 1])
-        return findPeakElementPlusStep(nums, start, mid);
-    else
-        return findPeakElementPlusStep(nums, mid + 1, end);
+```java
+class Solution {
+    public static int findPeakElement(int[] nums) {
+        return findPeakElementPlusStep(nums, 0, nums.length - 1);
+    }
+    
+    public static int findPeakElementPlusStep(int[] nums, int start , int end) {
+        if(start == end)
+            return start;
+        int mid = (start + end) / 2;
+        if(nums[mid] > nums[mid + 1])
+            return findPeakElementPlusStep(nums, start, mid);
+        else
+            return findPeakElementPlusStep(nums, mid + 1, end);
+    }
 }
 ```
 
@@ -353,30 +369,32 @@ If the target is not found in the array, return [-1, -1].
 
 ### 代码
 
-``` java
-public int[] searchRange(int[] nums, int target) {
-    int low = 0, mid = 0, high = nums.length - 1;
-    int[] result = {-1, -1};
-    while(low < high){
-        mid = (low + high) / 2;
-        if(nums[mid] >= target)
-            high = mid;
-        else
-            low = mid + 1;
-    }
-    if(nums.length == 0 || nums[low] != target)
+```java
+class Solution {
+    public int[] searchRange(int[] nums, int target) {
+        int low = 0, mid = 0, high = nums.length - 1;
+        int[] result = {-1, -1};
+        while(low < high){
+            mid = (low + high) / 2;
+            if(nums[mid] >= target)
+                high = mid;
+            else
+                low = mid + 1;
+        }
+        if(nums.length == 0 || nums[low] != target)
+            return result;
+        result[0] = low;
+        high = nums.length - 1;
+        while(low < high){
+            mid = (low + high + 1) / 2;
+            if(nums[mid] <= target)
+                low = mid;
+            else
+                high = mid - 1;
+        }
+        result[1] = high;
         return result;
-    result[0] = low;
-    high = nums.length - 1;
-    while(low < high){
-        mid = (low + high + 1) / 2;
-        if(nums[mid] <= target)
-            low = mid;
-        else
-            high = mid - 1;
     }
-    result[1] = high;
-    return result;
 }
 ```
 
@@ -397,24 +415,26 @@ Write an efficient algorithm that searches for a value in an m x n matrix. This 
 
 ### 代码
 
-``` java
-public static boolean searchMatrix(int[][] matrix, int target) {
-    if(matrix.length == 0)
-        return false;
-    if(matrix[0].length == 0)
-        return false;
-    return searchMatrixPlusStep(matrix, target, 0, matrix[0].length - 1);
-}
-
-public static boolean searchMatrixPlusStep(int[][] matrix, int target, int row, int col){
-    if(row >= matrix.length || col < 0)
-        return false;
-    if(matrix[row][col] == target)
-        return true;
-    else if(matrix[row][col] < target)
-        return searchMatrixPlusStep(matrix, target, row + 1, col);
-    else
-        return searchMatrixPlusStep(matrix, target, row, col - 1);
+```java
+class Solution {
+    public static boolean searchMatrix(int[][] matrix, int target) {
+        if(matrix.length == 0)
+            return false;
+        if(matrix[0].length == 0)
+            return false;
+        return searchMatrixPlusStep(matrix, target, 0, matrix[0].length - 1);
+    }
+    
+    public static boolean searchMatrixPlusStep(int[][] matrix, int target, int row, int col){
+        if(row >= matrix.length || col < 0)
+            return false;
+        if(matrix[row][col] == target)
+            return true;
+        else if(matrix[row][col] < target)
+            return searchMatrixPlusStep(matrix, target, row + 1, col);
+        else
+            return searchMatrixPlusStep(matrix, target, row, col - 1);
+    }
 }
 ```
 
@@ -436,16 +456,18 @@ Determine if you are able to reach the last index.
 
 ### 代码
 
-``` java
-public boolean canJump(int[] nums) {
-    int last = nums.length - 1;
-    for(int i = nums.length - 2; i >= 0; i--){
-        if(nums[i] >= last - i)
-            last = last <= i? last : i;
+```java
+class Solution {
+    public boolean canJump(int[] nums) {
+        int last = nums.length - 1;
+        for(int i = nums.length - 2; i >= 0; i--){
+            if(nums[i] >= last - i)
+                last = last <= i? last : i;
+        }
+        if(last == 0)
+            return true;
+        return false;
     }
-    if(last == 0)
-        return true;
-    return false;
 }
 ```
 
@@ -467,25 +489,27 @@ You are given coins of different denominations and a total amount of money amoun
 
 ### 代码
 
-``` java
-public static int coinChange(int[] coins, int amount) {
-    if(amount == 0)
-        return 0;
-    int[] dp = new int[amount + 1];
-    for(int i = 1; i <= amount; i++){
-        for(int j = 0; j < coins.length; j++){
-            if(i - coins[j] == 0)
-                dp[i] = 1;
-            if(i - coins[j] > 0 && dp[i - coins[j]] > 0)
-                if(dp[i] != 0)
-                    dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
-                else
-                    dp[i] = dp[i - coins[j]] + 1;
+```java
+class Solution {
+    public static int coinChange(int[] coins, int amount) {
+        if(amount == 0)
+            return 0;
+        int[] dp = new int[amount + 1];
+        for(int i = 1; i <= amount; i++){
+            for(int j = 0; j < coins.length; j++){
+                if(i - coins[j] == 0)
+                    dp[i] = 1;
+                if(i - coins[j] > 0 && dp[i - coins[j]] > 0)
+                    if(dp[i] != 0)
+                        dp[i] = Math.min(dp[i], dp[i - coins[j]] + 1);
+                    else
+                        dp[i] = dp[i - coins[j]] + 1;
+            }
         }
+        if(dp[amount] == 0)
+            return -1;
+        return dp[amount];
     }
-    if(dp[amount] == 0)
-        return -1;
-    return dp[amount];
 }
 ```
 
@@ -505,20 +529,22 @@ Given an unsorted array of integers, find the length of longest increasing subse
 
 ### 代码
 
-``` java
-public int lengthOfLIS(int[] nums) {
-    if(nums.length == 0)
-        return 0;
-    int[] dp = new int[nums.length];
-    int max = 0;
-    for(int i = 0; i < nums.length; i++){
-        for(int j = 0; j < i; j++) {
-            if (nums[i] > nums[j])
-                dp[i] = Math.max(dp[i], dp[j] + 1);
+```java
+class Solution {
+    public int lengthOfLIS(int[] nums) {
+        if(nums.length == 0)
+            return 0;
+        int[] dp = new int[nums.length];
+        int max = 0;
+        for(int i = 0; i < nums.length; i++){
+            for(int j = 0; j < i; j++) {
+                if (nums[i] > nums[j])
+                    dp[i] = Math.max(dp[i], dp[j] + 1);
+            }
+            max = Math.max(max, dp[i]);
         }
-        max = Math.max(max, dp[i]);
+        return max + 1;
     }
-    return max + 1;
 }
 ```
 
@@ -544,7 +570,7 @@ key & (length - 1)
 
 ### 代码
 
-``` java
+```java
 class RandomizedSet {
 
     int capacity = 256;
@@ -617,22 +643,24 @@ Since the return type is an integer, the decimal digits are truncated and only t
 
 ### 代码
 
-``` java
-public int mySqrt(int x) {
-    int start = 0, mid = 0, end = x;
-    int prestart = start, preend = end;
-    while(start < end){
-        mid = (start + end + 1) / 2;
-        if(mid > x / mid)
-            end = mid;
-        else
-            start = mid;
-        if(prestart == start && preend == end)
-            break;
-        preend = end;
-        prestart = start;
+```java
+class Solution {
+    public int mySqrt(int x) {
+        int start = 0, mid = 0, end = x;
+        int prestart = start, preend = end;
+        while(start < end){
+            mid = (start + end + 1) / 2;
+            if(mid > x / mid)
+                end = mid;
+            else
+                start = mid;
+            if(prestart == start && preend == end)
+                break;
+            preend = end;
+            prestart = start;
+        }
+        return mid == 0 || mid == 1 ? mid : mid - 1;
     }
-    return mid == 0 || mid == 1 ? mid : mid - 1;
 }
 ```
 
@@ -652,20 +680,22 @@ You may assume that the array is non-empty and the majority element always exist
 
 ### 代码
 
-``` java
-public int majorityElement(int[] nums) {
-    int count = 0, key = 0;
-    for(int input : nums){
-        if(count == 0){
-            count++;
-            key = input;
+```java
+class Solution {
+    public int majorityElement(int[] nums) {
+        int count = 0, key = 0;
+        for(int input : nums){
+            if(count == 0){
+                count++;
+                key = input;
+            }
+            else if(key == input)
+                count++;
+            else
+                count--;
         }
-        else if(key == input)
-            count++;
-        else
-            count--;
+        return key;
     }
-    return key;
 }
 ```
 
@@ -687,19 +717,21 @@ You need to return the least number of intervals the CPU will take to finish all
 
 ### 代码
 
-``` java
-public int leastInterval(char[] tasks, int n) {
-    int[] map = new int[26];
-    for(char input : tasks)
-        map[input - 'A']++;
-    Arrays.sort(map);
-    int countMax = 0;
-    for(int count : map){
-        if(count == map[25])
-            countMax++;
+```java
+class Solution {
+    public int leastInterval(char[] tasks, int n) {
+        int[] map = new int[26];
+        for(char input : tasks)
+            map[input - 'A']++;
+        Arrays.sort(map);
+        int countMax = 0;
+        for(int count : map){
+            if(count == map[25])
+                countMax++;
+        }
+        int posibility = (map[25] - 1) * (n + 1) + countMax;
+        return tasks.length >= posibility ? tasks.length : posibility;
     }
-    int posibility = (map[25] - 1) * (n + 1) + countMax;
-    return tasks.length >= posibility ? tasks.length : posibility;
 }
 ```
 
@@ -717,23 +749,59 @@ Given an array nums of n integers where n > 1,  return an array output such that
 
 ### 代码
 
-``` java
-public int[] productExceptSelf(int[] nums) {
-    if(nums.length == 0 || nums.length == 1)
-        return nums;
-    int left = 1, right = 1;
-    int[] result = new int[nums.length];
-    for(int i = 0; i < result.length; i++)
-        result[i] = 1;
-    for(int i = 1; i < nums.length; i++) {
-        result[i] *= left * nums[i - 1];
-        left *= nums[i - 1];
+```java
+class Solution {
+    public int[] productExceptSelf(int[] nums) {
+        if(nums.length == 0 || nums.length == 1)
+            return nums;
+        int left = 1, right = 1;
+        int[] result = new int[nums.length];
+        for(int i = 0; i < result.length; i++)
+            result[i] = 1;
+        for(int i = 1; i < nums.length; i++) {
+            result[i] *= left * nums[i - 1];
+            left *= nums[i - 1];
+        }
+        for(int i = nums.length - 2; i >=0; i--){
+            result[i] *= right * nums[i + 1];
+            right *= nums[i + 1];
+        }
+        return result;
     }
-    for(int i = nums.length - 2; i >=0; i--){
-        result[i] *= right * nums[i + 1];
-        right *= nums[i + 1];
+}
+```
+
+## 4Sum II
+
+### 问题描述
+
+Given four lists A, B, C, D of integer values, compute how many tuples (i, j, k, l) there are such that A[i] + B[j] + C[k] + D[l] is zero.
+
+To make problem a bit easier, all A, B, C, D have same length of N where 0 ≤ N ≤ 500. All integers are in the range of -2^28 to 2^28 - 1 and the result is guaranteed to be at most 2^31 - 1.
+
+### 解决思路
+
+2sum+2sum的思路就比较挫，很难保证所有可能解只判断一次，而且理论复杂度也不怎么低，还是O(n^2).
+
+不如直接一点，两两求所有组合，用Map判断匹配.
+
+### 代码
+
+```java
+class Solution {
+    public int fourSumCount(int[] A, int[] B, int[] C, int[] D) {
+        HashMap<Integer, Integer> map = new HashMap<>();
+        for(int i = 0; i < A.length; i++){
+            for(int j = 0; j < B.length; j++)
+                map.put(A[i] + B[j], map.getOrDefault(A[i] + B[j], 0) + 1);
+        }
+        int result = 0;
+        for(int i = 0; i < C.length; i++){
+            for(int j = 0; j < D.length; j++)
+                result += map.getOrDefault((C[i] + D[j]) * -1, 0);
+        }
+        return result;
     }
-    return result;
 }
 ```
 
