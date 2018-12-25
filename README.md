@@ -805,6 +805,39 @@ class Solution {
 }
 ```
 
+## First Missing Positive
+
+### 问题描述
+
+Given an unsorted integer array, find the smallest missing positive integer.
+
+### 解决思路
+
+让每个元素去他该在的位置的上，nums[i] == i +1
+
+### 代码
+
+```java
+class Solution {
+    public int firstMissingPositive(int[] nums) {
+        if(nums.length == 0)
+            return 1;
+        for(int i = 0; i < nums.length; i++){
+            while(nums[i] - 1 < nums.length && nums[i] - 1 >= 0 && nums[i] - 1 != i && nums[nums[i] - 1] != nums[i]) {
+                int temp = nums[nums[i] - 1];
+                nums[nums[i] - 1] = nums[i];
+                nums[i] = temp;
+            }
+        }
+        for(int i = 0; i < nums.length; i++){
+            if(i != nums[i] - 1)
+                return i + 1;
+        }
+        return nums[nums.length - 1] + 1;
+    }
+}
+```
+
 ## 编程细节
 
 1. 求中值时，a + (b - a) / 2的写法可以避免(a + b) / 2导致的溢出问题
