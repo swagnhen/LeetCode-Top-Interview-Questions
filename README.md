@@ -838,6 +838,41 @@ class Solution {
 }
 ```
 
+## Longest Consecutive Sequence
+
+### 问题描述
+
+Given an unsorted array of integers, find the length of the longest consecutive elements sequence.
+
+Your algorithm should run in O(n) complexity.
+
+### 解决思路
+
+想要实现O(n)复杂度的关键在于新元素插入Map后对老元素的修改，这道题的特殊之处在于其实只修改当前连续串的边界值就可以，故每次插入可把复杂度控制在O(1).
+
+### 代码
+
+```java
+class Solution {
+    public int longestConsecutive(int[] nums) {
+        int before = 0, after = 0, sum = 0, max = 0;
+        Map<Integer, Integer> map = new HashMap();
+        for(int num : nums){
+            if(!map.containsKey(num)) {
+                before = map.getOrDefault(num - 1, 0);
+                after = map.getOrDefault(num + 1, 0);
+                sum = before + after + 1;
+                map.put(num, sum);
+                max = max >= sum ? max : sum;
+                map.put(num - before, sum);
+                map.put(num + after, sum);
+            }
+        }
+        return max;
+    }
+}
+```
+
 ## 编程细节
 
 1. 求中值时，a + (b - a) / 2的写法可以避免(a + b) / 2导致的溢出问题
