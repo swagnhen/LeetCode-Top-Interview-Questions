@@ -873,6 +873,47 @@ class Solution {
 }
 ```
 
+## Find the Duplicate Number
+
+### 问题描述
+
+Given an array nums containing n + 1 integers where each integer is between 1 and n (inclusive), prove that at least one duplicate number must exist. Assume that there is only one duplicate number, find the duplicate one.
+
+Note:
+
+1. You must not modify the array (assume the array is read only).
+2. You must use only constant, O(1) extra space.
+3. Your runtime complexity should be less than O(n2).
+4. There is only one duplicate number in the array, but it could be repeated more than once.
+
+### 解决思路
+
+如果没有空间复杂度的限制，基数排序非常适合解决这道题
+
+这道题O(nlogn)与O(n)的思路都很有趣，O(nlogn)的解法相当于2分查找的变种，在1-n的解空间上二分查询，每趟记录大于中值和小于中值的元素个数，然后进入元素个数过多的那部分。
+
+O(n)的解法利用了组合数学中的鸽巢原理，对于这道题有结论按照slow = num[slow]的访问方式必然有环产生，且环的入口为那个重复元素。这样思路就变成了链表求环问题，在原本的思路上加上一个额外循环使循环次数为正周期即可。
+
+### 代码
+
+```java
+class Solution {
+    public int findDuplicate(int[] nums) {
+        int slow = nums[0], fast = nums[nums[0]];
+        while(slow != fast){
+            slow = nums[slow];
+            fast = nums[nums[fast]];
+        }
+        fast = 0;
+        while(slow != fast){
+            slow = nums[slow];
+            fast = nums[fast];
+        }
+        return fast;
+    }
+}
+```
+
 ## 编程细节
 
 1. 求中值时，a + (b - a) / 2的写法可以避免(a + b) / 2导致的溢出问题
