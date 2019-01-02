@@ -914,6 +914,44 @@ class Solution {
 }
 ```
 
+## Sliding Window Maximum
+
+### 问题描述
+
+Given an array nums, there is a sliding window of size k which is moving from the very left of the array to the very right. You can only see the k numbers in the window. Each time the sliding window moves right by one position. Return the max sliding window.
+
+Note:You may assume k is always valid, 1 ≤ k ≤ input array's size for non-empty array.
+
+Follow up:Could you solve it in linear time?
+
+### 解决思路
+
+当成最小栈的镜像问题就会变得很难解，最小队列可能应该没有高效实现。
+
+O(n)复杂度下有两种较好思路的解法。第一种利用了双端队列。由于这道题中一入必定绑定一出，所以不需要记录完整的最小序列，在第i个元素入队时，只有比这个元素小的元素我们才关心，所以其余的直接出队就可以。
+
+另一种解法比较巧妙，但也是一种通解思路。这种解法将整个数组分为n/k个区间，记录每个位置上在区间中的左边最大值和右边最大值。然后由表达式sliding-max(i) = max{right_max(i), left_max(i+w-1)}便可得到结果。
+
+```java
+class Solution {
+    public int[] maxSlidingWindow(int[] nums, int k) {
+        if(nums.length == 0)
+            return new int[]{};
+        int[] result = new int[nums.length - k + 1];
+        Deque<Integer> deque = new LinkedList();
+        for(int i = 0; i < nums.length; i++){
+            if(!deque.isEmpty() && deque.peek() <= i - k)
+                deque.poll();
+            while(!deque.isEmpty() && nums[deque.peekLast()] < nums[i])
+                deque.pollLast();
+            deque.add(i);
+            if(i >= k - 1)
+                result[i - k + 1] = nums[deque.peek()];
+        }
+        return result;
+    }
+}
+```
 ## 编程细节
 
 1. 求中值时，a + (b - a) / 2的写法可以避免(a + b) / 2导致的溢出问题
@@ -925,3 +963,4 @@ class Solution {
 7. 对排列组合问题求解往往需要用double来存储过程解，一方面先乘后除很容易造成类型溢出，另一方面乘除结合过程解很难为整数。在乘除结束后可以使用Math.round()进行取整.(e.t. [Unique Paths](https://leetcode.com/explore/interview/card/top-interview-questions-medium/111/dynamic-programming/808/discuss/22981/My-AC-solution-using-formula))
 8. 对逻辑环的判定可以使用Floyd Cycle detection algorithm(e.t. [Linked List Cycle](https://leetcode.com/explore/featured/card/top-interview-questions-easy/93/linked-list/773/discuss/44489/O(1)-Space-Solution), [Happy Number](https://leetcode.com/explore/interview/card/top-interview-questions-medium/113/math/815/discuss/56917/My-solution-in-C\(-O(1)-space-and-no-magic-math-property-involved-)))
 9. 在实际操作中，对一个只为int最小值的变量做单目负号运算不会有任何效果，值依然为int最小值
+10. 在一些极值问题的O(n)解法中，一趟向左和一趟向右的思路往往有不错的表现(e.t. [Sliding Window Maximum](https://leetcode.com/explore/interview/card/top-interview-questions-hard/116/array-and-strings/837/discuss/65881/O(n)-solution-in-Java-with-two-simple-pass-in-the-array))
