@@ -952,6 +952,61 @@ class Solution {
     }
 }
 ```
+
+## Minimum Window Substring
+
+### 问题描述
+
+Given a string S and a string T, find the minimum window in S which will contain all the characters in T in complexity O(n).
+
+Note:
++ If there is no such window in S that covers all characters in T, return the empty string "".
++ If there is such window, you are guaranteed that there will always be only one unique minimum window in S.
+
+### 解决思路
+
+思想其实相对简单，先拓展尾部，若窗口已满足条件就开始缩头部，直到破坏了条件就停止缩头部，再开始拓展尾部。
+
+### 代码
+
+```java
+class Solution {
+    public String minWindow(String s, String t) {
+        if(s.length() == 0 || t.length() == 0)
+            return "";
+        boolean hasSuitWindow = false;
+        int start = 0, head = 0, length = Integer.MAX_VALUE, counter = t.length();
+        Map<Character, Integer> map = new HashMap<>();
+        char[] cs = s.toCharArray(), ct = t.toCharArray();
+        for(char c : ct)
+            map.put(c, map.getOrDefault(c, 0) + 1);
+        for(int i = 0; i < cs.length; i++){
+            if(map.containsKey(cs[i])){
+                map.put(cs[i], map.get(cs[i]) - 1);
+                if(map.get(cs[i]) >= 0)
+                    counter--;
+            }
+            while(counter <= 0){
+                hasSuitWindow = true;
+                if(i - start <= length){
+                    head = start;
+                    length = i - start;
+                }
+                if(map.containsKey(cs[start])){
+                    map.put(cs[start], map.get(cs[start]) + 1);
+                    if(map.get(cs[start]) > 0)
+                        counter++;
+                }
+                start++;
+            }
+        }
+        if(!hasSuitWindow)
+            return "";
+        return s.substring(head, head + length + 1);
+    }
+}
+```
+
 ## 编程细节
 
 1. 求中值时，a + (b - a) / 2的写法可以避免(a + b) / 2导致的溢出问题
