@@ -1007,6 +1007,32 @@ class Solution {
 }
 ```
 
+## Evaluate Reverse Polish Notation
+
+### 问题描述
+
+Evaluate the value of an arithmetic expression in Reverse Polish Notation.
+
+Valid operators are +, -, *, /. Each operand may be an integer or another expression.
+
+Note:
++ Division between two integers should truncate toward zero.
++ The given RPN expression is always valid. That means the expression would always evaluate to a result and there won't be any divide by zero operation.
+
+### 解决思路
+
+比较好的解决思路是递归求解，每次用^取相加结果，用&取进位结果，当进位结果为0时，结束递归
+
+### 代码
+
+```java
+class Solution {
+    int getSum(int a, int b) {
+        return b==0? a:getSum(a^b, (a&b)<<1);
+    }
+}
+```
+
 ## 编程细节
 
 1. 求中值时，a + (b - a) / 2的写法可以避免(a + b) / 2导致的溢出问题
