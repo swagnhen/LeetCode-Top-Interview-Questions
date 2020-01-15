@@ -1033,6 +1033,54 @@ class Solution {
 }
 ```
 
+## Palindrome Partitioning
+
+### 问题描述
+
+Given a string s, partition s such that every substring of the partition is a palindrome.
+
+Return all possible palindrome partitioning of s.
+
+### 解决思路
+
+一开始的思路是动态规划，子问题的定义则该串所有一次分割产生的两部分的解的笛卡尔积的并集，但对几种情况的重复求解次数实在太多，效率真的8行。
+
+这道题位于回朔法分类下，将前种思路中的左边固定，将得到更好的结果。
+
+### 代码
+
+```java
+class Solution {
+    private boolean isPalindrome(String s){
+        char[] input = s.toCharArray();
+        for(int i = 0; i < s.length() / 2; i++)
+            if(input[i] != input[s.length() - i - 1])
+                return false;
+        return true;
+    }
+
+    private void backTracking(String s, int start, List<String> crrntl, List<List<String>> rsltl){
+        if(start >= s.length() && crrntl.size() > 0){
+            rsltl.add(new ArrayList<>(crrntl));
+            return;
+        }
+        for(int i = start; i < s.length(); i++){
+            if(isPalindrome(s.substring(start, i + 1))){
+                crrntl.add(s.substring(start, i + 1));
+                backTracking(s, i + 1, crrntl, rsltl);
+                crrntl.remove(crrntl.size() - 1);
+            }
+        }
+    }
+
+    public List<List<String>> partition(String s) {
+        List<List<String>> result = new LinkedList<>();
+        backTracking(s, 0, new LinkedList<>(), result);
+        return result;
+    }
+}
+```
+
 ## 编程细节
 
 1. 求中值时，a + (b - a) / 2的写法可以避免(a + b) / 2导致的溢出问题
