@@ -1,7 +1,5 @@
 package pers.swegnhan.leetcode.medium.treesandgraphs;
 
-import jdk.nashorn.api.tree.Tree;
-
 import java.util.*;
 
 /**
